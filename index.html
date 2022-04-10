@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .navbar{
+            width:60%;
+            height:40px;
+            background-color:blueviolet;
+            margin:auto;
+            display:flex;
+            grid-template-columns: 1fr, 1fr;
+            grid-template-rows: auto;
+            justify-content: space-around;
+        }
+        .navbar >a{
+            text-decoration:none;
+            color:white;
+            cursor: pointer;
+            padding:13px;
+        }
+        #form,#container{
+            display:flex;
+            flex-direction: column;
+            justify-content:center;
+            width:50%;
+            margin:auto;
+        }
+        #form{
+            width:100%;
+        }
+        #form > input, select{
+            margin:5px;
+            padding:10px;
+        }
+        h1{
+            margin:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="products.html" target="_blank">PRODUCTS</a>
+        <a href="index.html" target="_blank">ADMIN PANNEL</a>
+    </div>
+    <div id="container">
+        <h1>Admin Pannel</h1>
+        <form id="form">
+            <input required type="text" id="name" placeholder="enter product name">
+            <input required type="text" id="category" placeholder="Enter product category">
+            <input required type="text" id="image" placeholder="Enter product image url">
+            <input required type="number" id="price" placeholder="enter product price">
+            <select id="gender">
+                <option>Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+            <select id="sold">
+                <option>Sold ?</option>
+                <option>false</option>
+                <option>true</option>
+            </select>
+            <input type="submit">
+        </form>
+    </div>
+</body>
+</html>
+<script>
+    let productsArray = JSON.parse(localStorage.getItem('Products'))||[];
+    //constructor function
+    function createProduct(n,c,i,p,g,s){
+        this.name = n;
+        this.category = c;
+        this.image = i;
+        this.price = p;
+        this.gender = g;
+        this.sold = s;
+    }
+    document.getElementById("form").addEventListener("submit", addProduct);
+    function addProduct(){
+        event.preventDefault();
+        let k = document.getElementById("form");
+
+        let name = k.name.value;
+        let category = k.category.value;
+        let image = k.image.value;
+        let price = k.price.value;
+        let gender = k.gender.value;
+        let sold = k.sold.value;
+
+        if(k.gender.value == "Gender"){
+            gender = "Male";
+        }
+        if(k.sold.value == "Sold ?"){
+            sold = "false";
+        }
+
+        let product = new createProduct(name, category, image, price, gender, sold);
+        productsArray.push(product);
+        localStorage.setItem("Products",JSON.stringify(productsArray));
+    }
+</script>

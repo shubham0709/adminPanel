@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            grid-gap: 20px;
+            width: 80%;
+            margin: auto;
+            height: 500px;
+        }
+
+        .navbar {
+            width: 100%;
+            height: 100px;
+            background-color: rgb(136, 136, 136);
+            margin: auto;
+            display: flex;
+            grid-template-columns: 1fr, 1fr;
+            grid-template-rows: auto;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .navbar>a {
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            padding: 13px;
+        }
+
+        .card {
+            padding-bottom: 10px;
+            width: 100%;
+            height: auto;
+            background-color: rgb(231, 231, 231);
+            border-radius:20px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        }
+
+        .card>img {
+            width: 100%;
+            height: 200px;
+        }
+
+        .card_data {
+            padding-left: 20px;
+        }
+
+        .btns {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .btns>button {
+            cursor: pointer;
+            border:2px solid black;
+            padding:5px 5px;
+            border-radius: 5px;
+
+        }
+    </style>
+</head>
+<!-- image name category gender sold? price -->
+
+<body>
+    <div class="navbar">
+        <a href="products.html" target="_blank">PRODUCTS</a>
+        <h2>Number of products :<span id="counter">count</span></h2>
+        <a href="index.html" target="_blank">ADMIN PANNEL</a>
+    </div>
+    <div class="container">
+
+    </div>
+</body>
+
+</html>
+<script>
+    let productsArray = JSON.parse(localStorage.getItem('Products')) || [];
+    let container = document.querySelector('.container')
+    //document.querySelector('#count').innerText = productsArray.length;
+    // for (let i = 1; i <= 6; i++) {
+    //     let data = "<h" + i + ">this is h " + i + "</h" + i + ">";
+    //     container.innerHTML += data
+    // }
+        let count = productsArray.length;
+        document.getElementById('counter').innerText = count;
+    productsArray.map((elem, index) => {
+        
+                    
+        let container = document.querySelector('.container');
+
+        let card = document.createElement('div');
+        card.setAttribute('class', 'card product');
+        container.append(card);
+
+        let img = document.createElement('img');
+        img.setAttribute('src',elem.image);
+        card.append(img)
+
+        let card_data = document.createElement('div');
+        card_data.setAttribute("class","card_data");
+        card.append(card_data);
+
+        let nameh2 = document.createElement('h2');
+        nameh2.innerText = 'Name : '+elem.name;
+        card_data.append(nameh2);
+
+        let category = document.createElement('h3');
+        category.innerText = 'category : '+elem.category;
+        card_data.append(category);
+
+        let price = document.createElement('h3');
+        price.innerText = 'price : '+elem.price;
+        card_data.append(price);
+
+        let gender= document.createElement('h3');
+        gender.innerText = 'gender : '+elem.gender;
+        card_data.append(gender);
+
+        let btns = document.createElement('div');
+        btns.setAttribute('class','btns');
+        card_data.append(btns);
+
+        let soldElem = document.createElement('button');
+        if(elem.sold=='true')soldElem.innerText = 'MARK UNSOLD';
+        else soldElem.innerText = 'MARK SOLD';
+        soldElem.setAttribute('id','sold');
+        btns.append(soldElem);
+
+        let removeElem = document.createElement('button');
+        removeElem.innerText = 'REMOVE ITEM';
+        removeElem.setAttribute('id','remove');
+        btns.append(removeElem);
+
+        if(elem.sold=='false'){
+            soldElem.setAttribute('style','background-color: green')
+        }else if(elem.sold=='true'){
+            soldElem.setAttribute('style','background-color: red')
+        }
+        
+        removeElem.addEventListener("click", function () {
+            removeItem(elem, index);
+        })
+        soldElem.addEventListener("click", function () {
+            soldItem(elem, index, soldElem);
+        })
+    })
+
+    function removeItem(elem, index) {
+        let x = productsArray.splice(index, 1);
+        console.log(x);
+        localStorage.setItem('Products', JSON.stringify(productsArray));
+        window.location.reload();
+        console.log("remove item called");
+    }
+
+    function soldItem(elem, index, soldElem) {
+        if (elem.sold == "true") productsArray[index].sold = "false";
+        else productsArray[index].sold = "true";
+        localStorage.setItem('Products', JSON.stringify(productsArray));
+        if(elem.sold=='true')soldElem.innerText = 'MARK UNSOLD';
+        else soldElem.innerText = 'MARK SOLD';
+        //window.location.reload();
+        if(elem.sold=='false'){
+            soldElem.setAttribute('style','background-color: green')
+        }else if(elem.sold=='true'){
+            soldElem.setAttribute('style','background-color: red')
+        }
+    }
+</script>
